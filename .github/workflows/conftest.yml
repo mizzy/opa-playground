@@ -1,0 +1,29 @@
+name: conftest
+
+on:
+  pull_request:
+
+jobs:
+  iam:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [project-dev, project-prod]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/conftest
+        with:
+          policy: terraform-policies/iam.rego
+          files: ${{ matrix.project }}/iam.tf
+
+  s3:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [project-dev, project-prod]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/conftest
+        with:
+          policy: terraform-policies/s3.rego
+          files: ${{ matrix.project }}/s3.tf
